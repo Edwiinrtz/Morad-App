@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Morad-App</string>
+    <string name="title_activity_login">Login</string>
+    <string name="logo_app_id">moradapp</string>
+</resources>
