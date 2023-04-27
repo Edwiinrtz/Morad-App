@@ -12,13 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.morad_app.view.ui.components.Button
 import com.example.morad_app.view.ui.components.Input
 import com.example.morad_app.R
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     Scaffold(
 
         bottomBar = {
@@ -31,7 +33,7 @@ fun LoginScreen() {
                 Text(
                     text = "Registráte",
                     color = Color(0xFFEC1F1F),
-                    modifier = Modifier.clickable { /*send to sign in screen*/ })
+                    modifier = Modifier.clickable { navController.navigate("signin") })
 
             }
         }
@@ -52,7 +54,7 @@ fun LoginScreen() {
             )
             Input("Email")
             Input("Contraseña")
-            Button(text = "Ingresar")
+            Button(text = "Ingresar",navController, "dashboard")
         }
 
     }
@@ -62,5 +64,6 @@ fun LoginScreen() {
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    LoginScreen()
+    val navController = rememberNavController()
+    LoginScreen(navController)
 }

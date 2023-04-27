@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun Button(text: String) {
+fun Button(text: String, navController: NavController? = null, route:String="") {
     TextButton(
-        onClick = { /*TODO*/ }, modifier = Modifier
+        onClick = { navController?.navigate(route) }, modifier = Modifier
             .fillMaxWidth(.8f)
             .padding(0.dp,80.dp)
             .background(
