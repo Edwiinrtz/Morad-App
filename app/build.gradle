@@ -1,14 +1,15 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
 }
 
 android {
-    namespace 'com.example.morad_app'
+    namespace 'com.edwiinrtz.morad_app'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.morad_app"
+        applicationId "com.edwiinrtz.morad_app"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -63,4 +64,10 @@ dependencies {
 
     def nav_version = "2.5.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+
+    //firebase dependencies
+    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
 }

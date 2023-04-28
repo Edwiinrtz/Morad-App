@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "636258952623",
+    "project_id": "morad-app",
+    "storage_bucket": "morad-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636258952623:android:2a3c3273e034fde54f7b5a",
+        "android_client_info": {
+          "package_name": "com.edwiinrtz.morad_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636258952623-7fek045kcs2uvlnrvemuf4ldmgqg9jpp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDleOhlkxgzwuegqqolIU_GDbDDRTrKkOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636258952623-7fek045kcs2uvlnrvemuf4ldmgqg9jpp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
