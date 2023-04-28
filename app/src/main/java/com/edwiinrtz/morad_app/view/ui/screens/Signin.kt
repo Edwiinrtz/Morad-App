@@ -1,6 +1,7 @@
 package com.edwiinrtz.morad_app.view.ui.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import com.edwiinrtz.morad_app.view.ui.components.Input
 import com.edwiinrtz.morad_app.R
 import com.edwiinrtz.morad_app.model.Persona
 import com.edwiinrtz.morad_app.viewmodel.SigninViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
@@ -57,7 +59,9 @@ fun SigninScreen(navController: NavController, viewModel: SigninViewModel) {
                 val nPersona = Persona(name=name, lastName = lastName, Email = email, pass = pass)
                 if(!nPersona.Email.isNullOrBlank()) result = viewModel.signin(nPersona)
 
-                if (result) navController.navigate("dashboard")
+                if (result) {
+                    navController.navigate("dashboard")
+                }
             }
             Text(
                 text = "Ingresar",

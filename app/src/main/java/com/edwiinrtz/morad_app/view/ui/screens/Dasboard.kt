@@ -9,12 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
 import com.edwiinrtz.morad_app.model.Note
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun DashboardScreen(list:List<Note> = emptyList()) {
+fun DashboardScreen(list: List<Note> = emptyList(), currentUser: FirebaseUser?) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -44,6 +45,6 @@ fun changeState(drawerState: DrawerState,scope: CoroutineScope) {
 @Preview(showBackground = true)
 @Composable
 fun DashboardPreview() {
-    DashboardScreen()
+    //DashboardScreen()
 }
 
