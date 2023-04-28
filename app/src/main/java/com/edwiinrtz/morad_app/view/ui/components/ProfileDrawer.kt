@@ -1,6 +1,7 @@
 package com.edwiinrtz.morad_app.view.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ModalDrawer
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ProfileDrawer(name: String, lastName: String, email: String) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()

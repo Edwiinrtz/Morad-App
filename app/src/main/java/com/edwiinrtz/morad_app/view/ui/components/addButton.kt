@@ -15,13 +15,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun addButton() {
+fun addButton(action:()->Unit) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         FloatingActionButton(
-            onClick = { /*TODO*/ },
+            onClick = { action() },
             modifier = Modifier.size(80.dp),
             //backgroundColor = Color(0x80BABABA),
 
@@ -39,5 +39,5 @@ fun addButton() {
 @Preview(showBackground = true)
 @Composable
 fun addButtonPreview() {
-    addButton()
+    addButton(){}
 }

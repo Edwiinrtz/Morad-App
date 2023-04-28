@@ -56,8 +56,8 @@ fun SigninScreen(navController: NavController, viewModel: SigninViewModel) {
             Input("Contraseña", pass) { viewModel.onValueChange(passRef = true, nValue = it) }
             Button(text = "Registrar", navController, "dashboard") {
                 var result = false
-                val nPersona = Persona(name=name, lastName = lastName, Email = email, pass = pass)
-                if(!nPersona.Email.isNullOrBlank()) result = viewModel.signin(nPersona)
+                val nPersona = Persona(name=name, lastName = lastName, email = email, pass = pass)
+                if(!nPersona.email.isNullOrBlank()) result = viewModel.signin(nPersona)
 
                 if (result) {
                     navController.navigate("dashboard")

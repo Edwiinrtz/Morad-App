@@ -40,7 +40,7 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
     }
 
     fun signin(persona: Persona): Boolean {
-        val mail: String = persona.Email!!
+        val mail: String = persona.email!!
         val nPass: String = persona.pass!!
         createUser(mail, nPass, persona)
 
@@ -59,7 +59,8 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
 
         auth.createUserWithEmailAndPassword(mail, pass).addOnCompleteListener { it ->
             if (it.isSuccessful) {
-                database.child("users").child(it.result.user?.uid!!).setValue(persona)
+                persona.id = it.result.user?.uid!!
+                database.child("users").child(persona.id!!).setValue(persona)
             }
         }
 

@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
         val signinViewModel = SigninViewModel(auth)
         val loginViewModel = LoginViewModel(auth)
-        val dashboardViewModel = DashboardViewModel()
+        val dashboardViewModel = DashboardViewModel(auth)
 
         setContent {
             val navController = rememberNavController()
@@ -42,13 +42,17 @@ class MainActivity : ComponentActivity() {
                 startDestination = "login"
                 if (logged) {
                     startDestination = "dashboard"
+                    dashboardViewModel.getMorada()
+
                 }
                 NavHost(navController = navController, startDestination = startDestination) {
                     composable("login") { LoginScreen(navController, loginViewModel) }
                     composable("signin") {
                         SigninScreen(navController, signinViewModel)
                     }
-                    composable("dashboard") { DashboardScreen(currentUser = auth.currentUser, viewModel = dashboardViewModel) }
+                    composable("dashboard") {
+                        DashboardScreen(currentUser = auth.currentUser, viewModel = dashboardViewModel)
+                    }
                 }
                 //navigate to dashboard
             }

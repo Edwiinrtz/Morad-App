@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TopBar(home: Boolean = false, profileAction: ()->Unit) {
+fun TopBar(home: Boolean = false, profileAction: ()->Unit, moradaAction:()->Unit) {
     var positions = Arrangement.End
 
     if(home) positions = Arrangement.SpaceBetween
@@ -36,9 +36,8 @@ fun TopBar(home: Boolean = false, profileAction: ()->Unit) {
                 Icon(
                     imageVector = Icons.Default.Home,
                     contentDescription = "",
-                    Modifier.size(32.dp).clickable {  },
+                    Modifier.size(32.dp).clickable { moradaAction() },
                     tint = Color(0xFFBABABA),
-
                 )
             }
             Icon(
@@ -56,5 +55,5 @@ fun TopBar(home: Boolean = false, profileAction: ()->Unit) {
 @Preview(showBackground = true)
 @Composable
 fun TopBarPreview() {
-    TopBar(true){}
+    //TopBar(true){}
 }

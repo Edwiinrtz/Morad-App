@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.edwiinrtz.morad_app.R
 
 @Composable
-fun NoMorada(it: PaddingValues, crearAction:()-> Unit) {
+fun NoMorada(it: PaddingValues, crearAction:()-> Unit, joinAction:()->Unit) {
     Column(
         modifier = Modifier
             .padding(it)
@@ -56,7 +56,7 @@ fun NoMorada(it: PaddingValues, crearAction:()-> Unit) {
                 text = "Unirme",
                 color = Color(0xFFEC1F1F),
                 fontSize = 16.sp,
-                modifier = Modifier.clickable { /*send to join morada*/ }.padding(20.dp)
+                modifier = Modifier.clickable { joinAction() }.padding(20.dp)
             )
 
         }
