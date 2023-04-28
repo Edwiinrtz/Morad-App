@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.edwiinrtz.morad_app.model.Persona
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -39,38 +40,29 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
     }
 
     fun signin(persona: Persona): Boolean {
-        try {
-            val result = database.child("users").child(persona.id).setValue(persona)
-            if (result.isCanceled) return false
+        val mail: String = persona.Email!!
+        val nPass: String = persona.pass!!
+        createUser(mail, nPass, persona)
 
-        } catch (e: Exception) {
-            Log.e("err:", e.toString())
-        }
-        val mail: String =persona.Email!!
-        val nPass: String=persona.pass!!
-        createUser(mail,nPass)
+        /*if(!uid.isNullOrEmpty()){
+            persona.id = uid
+            if (result.isCanceled) return false
+        }else{
+            return false
+        }*/
         //auth.createUserWithEmailAndPassword(persona.Email!!, persona.pass)
         return true
 
     }
 
-    fun createUser(mail: String, pass: String) {
-        try {
-            val task = auth.createUserWithEmailAndPassword(mail, pass)
-            if (task.isSuccessful) {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d("TAG", "createUserWithEmail:success")
-                //val user = auth.currentUser
-            } else {
-                // If sign in fails, display a message to the user.
-                Log.w("TAG", "createUserWithEmail:failure: " + task.exception)
-                /*Toast.makeText(
-                baseContext, "Authentication failed.", Toast.LENGTH_SHORT
-            ).show()*/
+    fun createUser(mail: String, pass: String, persona: Persona) {
+
+        auth.createUserWithEmailAndPassword(mail, pass).addOnCompleteListener { it ->
+            if (it.isSuccessful) {
+                database.child("users").child(it.result.user?.uid!!).setValue(persona)
             }
-        }catch (e:Exception){
-            Log.w("TAG", "createUserWithEmail:failure: " + e.toString())
         }
+
 
     }
 

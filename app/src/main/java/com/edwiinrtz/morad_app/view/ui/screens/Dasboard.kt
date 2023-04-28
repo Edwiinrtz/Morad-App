@@ -5,41 +5,56 @@ import androidx.compose.material.DrawerState
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
+import com.edwiinrtz.morad_app.model.Morada
 import com.edwiinrtz.morad_app.model.Note
+import com.edwiinrtz.morad_app.viewmodel.DashboardViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun DashboardScreen(list: List<Note> = emptyList(), currentUser: FirebaseUser?) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+fun DashboardScreen(list: List<Note> = emptyList(), currentUser: FirebaseUser?, viewModel: DashboardViewModel) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
     val scope = rememberCoroutineScope()
+    var morada: Morada by remember { mutableStateOf( Morada(id = "", notesActive = emptyList(), notesArchived = emptyList(), members = emptyList(), ssid = "Bankai"))  }
     Scaffold(
-        topBar = { TopBar(true,profileAction = { changeState(drawerState,scope) }) },
+        topBar = {
+            TopBar(
+                home = false,
+                profileAction = {
+
+                }
+            )
+        },
         bottomBar = {
             //JoinMorada()
-            addButton()
+            if(morada.id!="")addButton()
             //AddNote()
         },
         drawerContent = {
-            //ProfileDrawer("Edwin", "Palacios", "edwin@email.com")
+            ProfileDrawer("Edwin", "Palacios", "edwin@email.com")
         }
 
 
     ) {
-        //NoMorada(it = it)
-        NoteList(list,padding = it)
+        if(morada.id==""){
+            NoMorada(it = it, crearAction={
+                morada = viewModel.createMorada(currentUser!!)
+            })
+        }else{
+            NoteList(morada.notesActive, padding = it)
+        }
     }
 }
 
-fun changeState(drawerState: DrawerState,scope: CoroutineScope) {
+fun changeState(drawerState: DrawerState, scope: CoroutineScope) {
     Log.i("DRAWER STATE", "Trying to open drawer")
-    if(drawerState.isOpen)  scope.launch { drawerState.close() }
-    scope.launch{drawerState.open()}
+
+    /*if(drawerState.isOpen)  scope.launch { drawerState.close() }
+    scope.launch{drawerState.open()}*/
 }
 
 @Preview(showBackground = true)

@@ -13,6 +13,7 @@ import com.edwiinrtz.morad_app.view.ui.components.DashboardScreen
 import com.edwiinrtz.morad_app.view.ui.screens.LoginScreen
 import com.edwiinrtz.morad_app.view.ui.screens.SigninScreen
 import com.edwiinrtz.morad_app.view.ui.theme.MoradAppTheme
+import com.edwiinrtz.morad_app.viewmodel.DashboardViewModel
 import com.edwiinrtz.morad_app.viewmodel.LoginViewModel
 import com.edwiinrtz.morad_app.viewmodel.SigninViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
 
         val signinViewModel = SigninViewModel(auth)
         val loginViewModel = LoginViewModel(auth)
+        val dashboardViewModel = DashboardViewModel()
 
         setContent {
             val navController = rememberNavController()
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     composable("signin") {
                         SigninScreen(navController, signinViewModel)
                     }
-                    composable("dashboard") { DashboardScreen(currentUser = auth.currentUser) }
+                    composable("dashboard") { DashboardScreen(currentUser = auth.currentUser, viewModel = dashboardViewModel) }
                 }
                 //navigate to dashboard
             }

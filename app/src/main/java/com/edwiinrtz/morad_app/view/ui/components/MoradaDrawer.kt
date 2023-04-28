@@ -31,7 +31,7 @@ fun MoradaDrawer(morada: Morada) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = morada.id,
+                text = morada.id?:"",
                 fontSize = 64.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Black,

@@ -44,7 +44,7 @@ fun TopBar(home: Boolean = false, profileAction: ()->Unit) {
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "",
-                Modifier.size(32.dp).clickable {  profileAction },
+                Modifier.size(32.dp).clickable {  profileAction() },
                 tint = Color(0xFFBABABA)
 
                 )
