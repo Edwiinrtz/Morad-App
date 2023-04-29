@@ -2,10 +2,7 @@ package com.edwiinrtz.morad_app.view.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -18,35 +15,42 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TopBar(home: Boolean = false, profileAction: ()->Unit, moradaAction:()->Unit) {
-    var positions = Arrangement.End
+fun TopBar(profileAction: () -> Unit, moradaAction: () -> Unit) {
+    var positions = Arrangement.SpaceBetween
 
-    if(home) positions = Arrangement.SpaceBetween
+    //if(home) positions = Arrangement.SpaceBetween
 
     TopAppBar(
-        backgroundColor = Color(0x33C6D8DF),
+        backgroundColor = Color(0x1AFFFFFF),
+        elevation = 1.dp,
         modifier = Modifier
             .fillMaxWidth(1f)
-        ) {
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth().background(color = Color(0x33C6D8DF)),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = positions
         ) {
-            if(home){
-                Icon(
-                    imageVector = Icons.Default.Home,
-                    contentDescription = "",
-                    Modifier.size(32.dp).clickable { moradaAction() },
-                    tint = Color(0xFFBABABA),
-                )
-            }
+
+            Icon(
+                imageVector = Icons.Default.Home,
+                contentDescription = "",
+                Modifier
+                    .size(32.dp)
+                    .clickable { moradaAction() }
+                    .padding(start = 5.dp),
+                tint = Color(0xFFBABABA),
+            )
+
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "",
-                Modifier.size(32.dp).clickable {  profileAction() },
+                Modifier
+                    .size(32.dp)
+                    .clickable { profileAction() }
+                    .padding(end = 5.dp),
                 tint = Color(0xFFBABABA)
 
-                )
+            )
         }
 
     }
@@ -55,5 +59,5 @@ fun TopBar(home: Boolean = false, profileAction: ()->Unit, moradaAction:()->Unit
 @Preview(showBackground = true)
 @Composable
 fun TopBarPreview() {
-    //TopBar(true){}
+    TopBar({}, {})
 }

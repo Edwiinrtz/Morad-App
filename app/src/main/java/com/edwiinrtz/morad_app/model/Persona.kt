@@ -8,6 +8,6 @@ data class Persona(
     val lastName: String? = null,
     val email: String? = null,
     val pass: String? = null,
-    val morada_id: String? = null,
-    val atHome: Boolean = false
+    var morada_id: String? = null,
+    var atHome: Boolean? = false
 )

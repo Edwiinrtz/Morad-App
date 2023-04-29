@@ -18,6 +18,7 @@ import com.edwiinrtz.morad_app.R
 
 @Composable
 fun NoMorada(it: PaddingValues, crearAction:()-> Unit, joinAction:()->Unit) {
+
     Column(
         modifier = Modifier
             .padding(it)

@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
 import com.edwiinrtz.morad_app.model.Morada
 import com.edwiinrtz.morad_app.model.Note
 import com.edwiinrtz.morad_app.viewmodel.DashboardViewModel
@@ -17,23 +18,23 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun DashboardScreen(list: List<Note> = emptyList(), currentUser: FirebaseUser?, viewModel: DashboardViewModel) {
-
+fun DashboardScreen(
+    currentUser: FirebaseUser?,
+    viewModel: DashboardViewModel
+) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    val mor = Morada(id = "", notesActive = emptyList(), notesArchived = emptyList(), members = emptyList(), ssid = "Bankai")
-
-    val morada: Morada by viewModel.morada.observeAsState(mor)
-    val home: Boolean by viewModel.home.observeAsState(initial = false)
+    //val home: Boolean by viewModel.home.observeAsState(initial = false)
     val bottomView: String by viewModel.bottomView.observeAsState(initial = "")
-    val drawer :String by viewModel.drawer.observeAsState(initial = "")
+    val drawer: String by viewModel.drawer.observeAsState(initial = "")
+    val contentView: String by viewModel.content.observeAsState(initial = "nomorada")
+    val joinText: String by viewModel.joinMoradaText.observeAsState(initial = "")
 
-    //var morada: Morada by remember { mutableStateOf( )  }
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             TopBar(
-                home = home,
                 profileAction = {
                     viewModel.openDrawer("profile")
                     scope.launch { scaffoldState.drawerState.open() }
@@ -44,33 +45,57 @@ fun DashboardScreen(list: List<Note> = emptyList(), currentUser: FirebaseUser?, 
                 }
             )
         },
-        drawerContent ={
-            if(drawer == "profile") ProfileDrawer("Edwin", "Palacios", "edwin@email.com")
-            if(drawer == "morada") MoradaDrawer(morada = morada)
+        drawerContent = {
+            if (drawer == "profile") ProfileDrawer(
+                viewModel.user.value?.name.toString(),
+                viewModel.user.value?.lastName.toString(),
+                currentUser?.email.toString()
+            )
+            if (drawer == "morada") MoradaDrawer(morada = viewModel.morada.value ?: null)
         },
         bottomBar = {
-            if(bottomView == "joinmorada") JoinMorada(
-                closeAction = { viewModel.changeBottonView("") },
-                join = {}
-            )
-            if(bottomView == "addbutton") addButton{viewModel.changeBottonView("addnote")}
-            if(bottomView == "addnote") AddNote{viewModel.changeBottonView("addbutton")}
+            if (bottomView == "joinmorada") {
+                JoinMorada(
+                    closeAction = { viewModel.changeBottonView("") },
+                    changeValue = { viewModel.onValueChange(joinRef = true, nValue = it) },
+                    text = joinText,
+                    join = { viewModel.joinMorada() }
+                )
+            }
+            if (bottomView == "addbutton") addButton { viewModel.changeBottonView("addnote") }
+            if (bottomView == "addnote") AddNote { viewModel.changeBottonView("addbutton") }
         },
+        content = {
+
+            /*if (viewModel.morada.value?.id.isNullOrEmpty()) {
+                viewModel.changeContentState("nomorada")
+                //viewModel.changeBottonView("")
+
+            } else {
+                viewModel.changeContentState("list")
+                //viewModel.changeBottonView("addnote")
+            }*/
+
+            if (contentView == "list") {
+                NoteList(
+                    viewModel.morada.value?.notesActive ?: emptyList(),
+                    padding = it
+                )
+            }
+
+            if (contentView == "nomorada") {
+                NoMorada(
+                    it = it,
+                    crearAction = {
+                        viewModel.createMorada(currentUser!!)
+                    },
+                    joinAction = { viewModel.changeBottonView("joinmorada") })
+            }
 
 
-
-    ) {
-        if(morada.id==""){
-            NoMorada(
-                it = it,
-                crearAction = { viewModel.createMorada(currentUser!!) },
-                joinAction = {viewModel.changeBottonView("joinmorada")})
-        }else{
-            NoteList(morada.notesActive?: emptyList(), padding = it)
         }
-    }
+    )
 }
-
 
 
 fun changeState(drawerState: DrawerState, scope: CoroutineScope) {

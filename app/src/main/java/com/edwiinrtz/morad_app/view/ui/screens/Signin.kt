@@ -23,12 +23,13 @@ import com.edwiinrtz.morad_app.view.ui.components.Button
 import com.edwiinrtz.morad_app.view.ui.components.Input
 import com.edwiinrtz.morad_app.R
 import com.edwiinrtz.morad_app.model.Persona
+import com.edwiinrtz.morad_app.viewmodel.LoginViewModel
 import com.edwiinrtz.morad_app.viewmodel.SigninViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
-fun SigninScreen(navController: NavController, viewModel: SigninViewModel) {
+fun SigninScreen(navController: NavController, viewModel: SigninViewModel, loginViewModel: LoginViewModel) {
 
     val name: String by viewModel.name.observeAsState(initial = "")
     val lastName: String by viewModel.lastName.observeAsState(initial = "")
@@ -58,9 +59,9 @@ fun SigninScreen(navController: NavController, viewModel: SigninViewModel) {
                 var result = false
                 val nPersona = Persona(name=name, lastName = lastName, email = email, pass = pass)
                 if(!nPersona.email.isNullOrBlank()) result = viewModel.signin(nPersona)
-
                 if (result) {
-                    navController.navigate("dashboard")
+                    //loginViewModel.login(nPersona.email!!,nPersona.pass!!)
+                    navController.navigate("login")
                 }
             }
             Text(

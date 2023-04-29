@@ -63,7 +63,13 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             Input("Contraseña",pass){viewModel.onValueChange(passRef = true, nValue = it)}
             Button(text = "Ingresar",navController, "dashboard"){
                 viewModel.login(email, pass)
-                navController.navigate("dashboard")
+
+
+                navController.navigate("dashboard"){
+                    popUpTo(navController.graph.id){
+                        inclusive=true
+                    }
+                }
             }
         }
 

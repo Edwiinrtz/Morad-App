@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.edwiinrtz.morad_app.model.Morada
 
 @Composable
-fun MoradaDrawer(morada: Morada) {
+fun MoradaDrawer(morada: Morada? = null) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,7 +31,7 @@ fun MoradaDrawer(morada: Morada) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = morada.id?:"",
+                text = morada?.id?:"",
                 fontSize = 64.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Black,
@@ -46,7 +46,7 @@ fun MoradaDrawer(morada: Morada) {
             )
             Spacer(modifier = Modifier.size(60.dp))
             Text(
-                text = "Red Wifi: " + morada.ssid,
+                text = "Red Wifi: " + morada?.ssid?:"",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp),
@@ -64,7 +64,7 @@ fun MoradaDrawer(morada: Morada) {
             )
             Spacer(modifier = Modifier.size(10.dp))
             LazyColumn {
-                items(morada.members) {
+                items(morada?.members?: emptyList()) {
                     Card(modifier = Modifier.padding(10.dp)) {
                         Row(
                             modifier = Modifier
@@ -84,7 +84,7 @@ fun MoradaDrawer(morada: Morada) {
                             ) {
                                 drawCircle(
 
-                                    color = if (it.atHome) Color(0xFF00FF19) else Color(
+                                    color = if (it.atHome==true) Color(0xFF00FF19) else Color(
                                         0xFFBABABA
                                     )
                                 )
@@ -104,6 +104,6 @@ fun MoradaDrawer(morada: Morada) {
 @Composable
 fun MoradaDrawerPreview() {
     //val personas = listOf(Persona("Edwin", true), Persona("Roy", false), Persona("Mariana", false))
-    val morada = Morada(id = "2508", emptyList(), emptyList(), emptyList(), "Bankai")
+    val morada = Morada(id = "2508",  mutableListOf(),  mutableListOf(),  mutableListOf(), "Bankai")
     MoradaDrawer(morada)
 }

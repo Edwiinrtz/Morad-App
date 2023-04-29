@@ -3,9 +3,10 @@ package com.edwiinrtz.morad_app.model
 import kotlin.random.Random
 
 data class Morada(
-    val id: String?= ""+Random.nextInt(1000, 9999),
-    val notesActive: List<Note>,
-    val notesArchived: List<Note>,
-    var members: List<Persona>,
-    val ssid: String
+    val id: String?= null,
+    var notesActive: MutableList<Note>?= mutableListOf(),
+    var notesArchived: MutableList<Note>?= mutableListOf(),
+    var members: MutableList<Persona>?= mutableListOf(),
+    var ssid: String?=null
 )
+

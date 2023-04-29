@@ -42,7 +42,12 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
     fun signin(persona: Persona): Boolean {
         val mail: String = persona.email!!
         val nPass: String = persona.pass!!
-        createUser(mail, nPass, persona)
+        auth.createUserWithEmailAndPassword(mail, nPass).addOnCompleteListener { it ->
+            if (it.isSuccessful) {
+                persona.id = it.result.user?.uid!!
+                database.child("users").child(persona.id!!).setValue(persona)
+            }
+        }
 
         /*if(!uid.isNullOrEmpty()){
             persona.id = uid
@@ -52,18 +57,6 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
         }*/
         //auth.createUserWithEmailAndPassword(persona.Email!!, persona.pass)
         return true
-
-    }
-
-    fun createUser(mail: String, pass: String, persona: Persona) {
-
-        auth.createUserWithEmailAndPassword(mail, pass).addOnCompleteListener { it ->
-            if (it.isSuccessful) {
-                persona.id = it.result.user?.uid!!
-                database.child("users").child(persona.id!!).setValue(persona)
-            }
-        }
-
 
     }
 
