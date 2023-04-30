@@ -10,7 +10,6 @@ import com.google.firebase.auth.FirebaseUser
 class LoginViewModel(private val auth: FirebaseAuth) : ViewModel() {
 
 
-
     private var _email = MutableLiveData<String>()
     var email: LiveData<String> = _email
 
@@ -35,6 +34,8 @@ class LoginViewModel(private val auth: FirebaseAuth) : ViewModel() {
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d("TAG", "signInWithEmail:success")
+                _email.value = ""
+                _pass.value = ""
                 action()
                 //user = auth.currentUser!!
             } else {

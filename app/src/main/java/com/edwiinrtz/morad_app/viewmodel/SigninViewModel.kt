@@ -46,6 +46,10 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
             if (it.isSuccessful) {
                 persona.id = it.result.user?.uid!!
                 database.child("users").child(persona.id!!).setValue(persona)
+                _email.value = ""
+                _pass.value = ""
+                _name.value = ""
+                _lastName.value = ""
             }
         }
 
