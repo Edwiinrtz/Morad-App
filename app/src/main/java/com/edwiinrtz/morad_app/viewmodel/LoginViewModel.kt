@@ -29,20 +29,18 @@ class LoginViewModel(private val auth: FirebaseAuth) : ViewModel() {
     }
 
 
-    fun login(mail: String, pass: String) {
+    fun login(mail: String, pass: String, action:()->Unit) {
 
-        val task = auth.signInWithEmailAndPassword(mail, pass)
-
-        if (task.isSuccessful) {
-            // Sign in success, update UI with the signed-in user's information
-            Log.d("TAG", "signInWithEmail:success")
-            //user = auth.currentUser!!
-
-        } else {
-            // If sign in fails, display a message to the user.
-            Log.w("TAG", "signInWithEmail:failure", task.exception)
-
-            //updateUI(null)
+        auth.signInWithEmailAndPassword(mail, pass).addOnCompleteListener{ task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d("TAG", "signInWithEmail:success")
+                action()
+                //user = auth.currentUser!!
+            } else {
+                // If sign in fails, display a message to the user.
+                //updateUI(null)
+            }
         }
     }
 

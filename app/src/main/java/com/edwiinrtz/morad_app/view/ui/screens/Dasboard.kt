@@ -10,6 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
+import androidx.navigation.NavController
 import com.edwiinrtz.morad_app.model.Morada
 import com.edwiinrtz.morad_app.model.Note
 import com.edwiinrtz.morad_app.viewmodel.DashboardViewModel
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DashboardScreen(
+    navController: NavController,
     currentUser: FirebaseUser?,
     viewModel: DashboardViewModel
 ) {
@@ -49,8 +51,16 @@ fun DashboardScreen(
             if (drawer == "profile") ProfileDrawer(
                 viewModel.user.value?.name.toString(),
                 viewModel.user.value?.lastName.toString(),
-                currentUser?.email.toString()
-            )
+                currentUser?.email.toString(),
+
+                ) {
+                viewModel.signout()
+                navController.navigate("login"){
+                    popUpTo(navController.graph.id){
+                        inclusive=true
+                    }
+                }
+            }
             if (drawer == "morada") MoradaDrawer(morada = viewModel.morada.value ?: null)
         },
         bottomBar = {
@@ -66,16 +76,6 @@ fun DashboardScreen(
             if (bottomView == "addnote") AddNote { viewModel.changeBottonView("addbutton") }
         },
         content = {
-
-            /*if (viewModel.morada.value?.id.isNullOrEmpty()) {
-                viewModel.changeContentState("nomorada")
-                //viewModel.changeBottonView("")
-
-            } else {
-                viewModel.changeContentState("list")
-                //viewModel.changeBottonView("addnote")
-            }*/
-
             if (contentView == "list") {
                 NoteList(
                     viewModel.morada.value?.notesActive ?: emptyList(),

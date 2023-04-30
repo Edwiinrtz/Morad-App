@@ -49,8 +49,8 @@ class MainActivity : ComponentActivity() {
             MoradAppTheme {
                 startDestination = "login"
                 if (logged) {
-                    dashboardViewModel.getUser()
-                    dashboardViewModel.getMorada()
+                    /*dashboardViewModel.getUser()
+                    dashboardViewModel.getMorada()*/
                     startDestination = "dashboard"
                 }
                 NavHost(navController = navController, startDestination = startDestination) {
@@ -63,9 +63,13 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("dashboard") {
 
+                        dashboardViewModel.getUser()
+                        dashboardViewModel.getMorada()
                         DashboardScreen(
+                            navController=navController,
                             currentUser = auth.currentUser,
                             viewModel = dashboardViewModel
+
                         )
 
                     }

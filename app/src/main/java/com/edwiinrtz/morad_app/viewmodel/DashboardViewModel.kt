@@ -102,8 +102,8 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
     }
 
     fun getMorada() {
-        Log.i("ViewModel", auth.currentUser?.uid!!)
-        database.child("users").child(auth.currentUser?.uid!!).get().addOnCompleteListener { task ->
+        //Log.i("ViewModel", auth.currentUser?.uid!!)
+        database.child("users").child(auth.currentUser?.uid?:"").get().addOnCompleteListener { task ->
             val result = task.result.value.toString()
             val user = Gson().fromJson(result, Persona::class.java)
             val morada_id = user.morada_id ?: ""
@@ -122,11 +122,17 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
     }
 
     fun getUser() {
-        database.child("users").child(auth.currentUser?.uid!!).get().addOnCompleteListener { task ->
+        database.child("users").child(auth.currentUser?.uid?:"").get().addOnCompleteListener { task ->
             val result = task.result.value.toString()
             _user.value = Gson().fromJson(result, Persona::class.java)
 
         }
+    }
+
+    fun signout():Boolean{
+        val result = auth.signOut()
+        Log.i("viewModel", result.toString())
+        return true
     }
 
     fun changeBottonView(nView: String) {

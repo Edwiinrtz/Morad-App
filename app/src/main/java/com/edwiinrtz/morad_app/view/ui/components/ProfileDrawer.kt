@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ProfileDrawer(name: String, lastName: String, email: String) {
+fun ProfileDrawer(name: String, lastName: String, email: String, signout:()->Unit) {
 
     Column(
         modifier = Modifier
@@ -39,7 +39,7 @@ fun ProfileDrawer(name: String, lastName: String, email: String) {
                 fontSize = 16.sp
             )
         }
-        Button(text = "Cerrar Sesion"){}
+        Button(text = "Cerrar Sesion"){signout()}
 
     }
 }
@@ -47,5 +47,5 @@ fun ProfileDrawer(name: String, lastName: String, email: String) {
 @Preview(showBackground = true)
 @Composable
 fun ProfileDrawerPreview() {
-    ProfileDrawer("Edwin", "Palacios", "edwin@email.com")
+    ProfileDrawer("Edwin", "Palacios", "edwin@email.com"){}
 }
