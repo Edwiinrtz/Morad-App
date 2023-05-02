@@ -12,15 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.edwiinrtz.morad_app.viewmodel.DashboardViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddNote(action: () -> Unit) {
+fun AddNote(title:String, descr:String,close: () -> Unit,action: () -> Unit, viewModel: DashboardViewModel) {
 
     val swipeableState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToEnd) {
-                action()
+                close()
             }
             true
         }
@@ -43,9 +44,9 @@ fun AddNote(action: () -> Unit) {
                     .padding(horizontal = 20.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Input(label = "Titulo", "") {}
-                Input(label = "Descripción", "") {}
-                Button(text = "Enviar") {}
+                Input(label = "Titulo", title) {viewModel.onValueChange(titleRef = true, nValue = it)}
+                Input(label = "Descripción", descr) {viewModel.onValueChange(descRef = true, nValue = it)}
+                Button(text = "Enviar") {action()}
             }
         }
     }
@@ -57,5 +58,5 @@ fun AddNote(action: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun AddNotePreview() {
-    AddNote() {}
+    //AddNote({},{})
 }

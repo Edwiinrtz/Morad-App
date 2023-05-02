@@ -55,7 +55,6 @@ class MainActivity : ComponentActivity() {
                 }
                 NavHost(navController = navController, startDestination = startDestination) {
                     composable("login") {
-
                         LoginScreen(navController, loginViewModel)
                     }
                     composable("signin") {

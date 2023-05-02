@@ -26,11 +26,16 @@ fun DashboardScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
     //val home: Boolean by viewModel.home.observeAsState(initial = false)
     val bottomView: String by viewModel.bottomView.observeAsState(initial = "")
     val drawer: String by viewModel.drawer.observeAsState(initial = "")
     val contentView: String by viewModel.content.observeAsState(initial = "nomorada")
     val joinText: String by viewModel.joinMoradaText.observeAsState(initial = "")
+
+
+    val titleNote: String by viewModel.titleNote.observeAsState(initial = "")
+    val descrNote: String by viewModel.descrNote.observeAsState(initial = "")
 
 
     Scaffold(
@@ -73,14 +78,26 @@ fun DashboardScreen(
                 )
             }
             if (bottomView == "addbutton") addButton { viewModel.changeBottonView("addnote") }
-            if (bottomView == "addnote") AddNote { viewModel.changeBottonView("addbutton") }
+            if (bottomView == "addnote") AddNote(
+                close={viewModel.changeBottonView("addbutton")},
+                action={
+                    viewModel.createNota{
+                        navController.navigate("dashboard")
+                    }
+                },
+                title = titleNote,
+                descr = descrNote,
+                viewModel = viewModel
+                )
         },
         content = {
             if (contentView == "list") {
                 NoteList(
                     viewModel.morada.value?.notesActive ?: emptyList(),
                     padding = it
-                )
+                ){note ->
+                    viewModel.archiveNote(note){ }
+                }
             }
 
             if (contentView == "nomorada") {

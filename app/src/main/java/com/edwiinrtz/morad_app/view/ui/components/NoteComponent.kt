@@ -13,25 +13,28 @@ import androidx.compose.ui.unit.sp
 import com.edwiinrtz.morad_app.model.Note
 
 @Composable
-fun NoteComponent(note: Note) {
+fun NoteComponent(note: Note, toArchive: (Note) -> Unit) {
     var checked by remember { mutableStateOf(note.archived) }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 18.dp, horizontal = 8.dp),
-
-
+            .padding(vertical = 9.dp, horizontal = 8.dp),
         elevation = 10.dp
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(10.dp)) {
             Column {
-                Text(text = note.title, fontSize = 20.sp, fontWeight = FontWeight.Black)
-                Text(text = note.description, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = note.title?:"", fontSize = 20.sp, fontWeight = FontWeight.Black)
+                Text(text = note.description?:"", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
             }
-            Checkbox(checked = checked, onCheckedChange = {
-                checked = !checked;
+            Checkbox(checked = checked?:false, onCheckedChange = {
+
+                checked = !checked!!;
                 note.archived = checked
+
+                if(note.archived==true){
+                    toArchive(note)
+                }
             })
         }
     }
@@ -41,5 +44,5 @@ fun NoteComponent(note: Note) {
 @Composable
 fun NotePreview() {
     val note = Note("Comprar", "Comprar crema dental y jabon de baño")
-    NoteComponent(note)
+    NoteComponent(note){}
 }

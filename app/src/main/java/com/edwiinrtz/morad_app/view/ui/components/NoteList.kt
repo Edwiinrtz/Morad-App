@@ -13,11 +13,12 @@ import com.edwiinrtz.morad_app.model.Note
 
 
 @Composable
-fun NoteList(list_note: List<Note> = emptyList(), padding: PaddingValues) {
+fun NoteList(list_note: List<Note> = emptyList(), padding: PaddingValues, toArchive: (Note) -> Unit) {
+
     LazyColumn(modifier = Modifier.fillMaxWidth().padding(padding)) {
 
         items(list_note){ note->
-            NoteComponent(note)
+            NoteComponent(note, toArchive)
         }
     }
 }
@@ -32,5 +33,5 @@ fun NoteListPreview() {
 
     )
     val padding = PaddingValues(100.dp)
-    NoteList(list_note = list, padding)
+    NoteList(list_note = list, padding){}
 }
