@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.edwiinrtz.morad_app.model.Morada
 
 @Composable
-fun MoradaDrawer(morada: Morada? = null) {
+fun MoradaDrawer(morada: Morada? = null, abandonar:() -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,7 +95,7 @@ fun MoradaDrawer(morada: Morada? = null) {
                 }
             }
         }
-        Button(text = "Abandonar Morada"){}
+        Button(text = "Abandonar Morada"){abandonar()}
 
     }
 }
@@ -105,5 +105,5 @@ fun MoradaDrawer(morada: Morada? = null) {
 fun MoradaDrawerPreview() {
     //val personas = listOf(Persona("Edwin", true), Persona("Roy", false), Persona("Mariana", false))
     val morada = Morada(id = "2508",  mutableListOf(),  mutableListOf(),  mutableListOf(), "Bankai")
-    MoradaDrawer(morada)
+    MoradaDrawer(morada){}
 }

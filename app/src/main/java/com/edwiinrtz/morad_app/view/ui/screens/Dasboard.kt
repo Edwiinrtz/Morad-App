@@ -31,6 +31,7 @@ fun DashboardScreen(
     val bottomView: String by viewModel.bottomView.observeAsState(initial = "")
     val drawer: String by viewModel.drawer.observeAsState(initial = "")
     val contentView: String by viewModel.content.observeAsState(initial = "nomorada")
+
     val joinText: String by viewModel.joinMoradaText.observeAsState(initial = "")
 
 
@@ -66,7 +67,17 @@ fun DashboardScreen(
                     }
                 }
             }
-            if (drawer == "morada") MoradaDrawer(morada = viewModel.morada.value ?: null)
+
+
+            if (drawer == "morada") MoradaDrawer(morada = viewModel.morada.value ?: null){
+                viewModel.leaveMorada()
+
+                navController.navigate("dashboard"){
+                    popUpTo(navController.graph.id){
+                        inclusive=true
+                    }
+                }
+            }
         },
         bottomBar = {
             if (bottomView == "joinmorada") {
@@ -82,7 +93,11 @@ fun DashboardScreen(
                 close={viewModel.changeBottonView("addbutton")},
                 action={
                     viewModel.createNota{
-                        navController.navigate("dashboard")
+                        navController.navigate("dashboard"){
+                            popUpTo(navController.graph.id){
+                                inclusive=true
+                            }
+                        }
                     }
                 },
                 title = titleNote,
@@ -96,7 +111,14 @@ fun DashboardScreen(
                     viewModel.morada.value?.notesActive ?: emptyList(),
                     padding = it
                 ){note ->
-                    viewModel.archiveNote(note){ }
+                    viewModel.archiveNote(note){
+
+                        navController.navigate("dashboard"){
+                            popUpTo(navController.graph.id){
+                                inclusive=true
+                            }
+                        }
+                    }
                 }
             }
 

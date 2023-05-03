@@ -65,7 +65,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
         )
 
         database.child("users").child(creatorUser.uid).get().addOnCompleteListener { task ->
-            val result = task.result.value.toString()
+            val result = Gson().toJson(task.result.value)
             val user = Gson().fromJson(result, Persona::class.java)
             val listUser = mutableListOf(user)
             nMorada.members = listUser
@@ -84,13 +84,14 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
         Log.i("viewModel", user.value.toString())
         if (!joinMoradaText.value.isNullOrEmpty()) {
             database.child("moradas").child(joinMoradaText.value!!).get().addOnCompleteListener {
-                val tempMorada = Gson().fromJson(it.result.value.toString(), Morada::class.java)
+                val tempMorada = Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
                 //val added = tempMorada.members?.add(auth.currentUser)
 
                 //if (added == true) {
                 database.child("users").child(auth.currentUser?.uid!!).get()
                     .addOnCompleteListener { xx ->
-                        val nUser = Gson().fromJson(xx.result.value.toString(), Persona::class.java)
+                        val nUser = Gson().fromJson(Gson().toJson(xx.result.value), Persona::class.java)
+                        nUser.morada_id = tempMorada.id
 
                         tempMorada.members?.add(nUser)
                         Log.i("members", tempMorada.members.toString())
@@ -112,11 +113,46 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
         }
     }
 
+    fun leaveMorada() {
+        //Log.i("viewModel", user.value.toString())
+        //if (!joinMoradaText.value.isNullOrEmpty()) {
+        database.child("moradas").child(morada.value?.id.toString()).get().addOnCompleteListener {
+            val tempMorada = Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
+            //val added = tempMorada.members?.add(auth.currentUser)
+
+            //if (added == true) {
+            database.child("users").child(auth.currentUser?.uid!!).get()
+                .addOnCompleteListener { xx ->
+                    val nUser = Gson().fromJson(Gson().toJson(xx.result.value), Persona::class.java)
+
+
+                    Log.i("user", nUser.toString())
+                    Log.i("members", tempMorada.members.toString())
+
+                    tempMorada.members?.remove(nUser)
+                    //Log.i("members", tempMorada.members.toString())
+                    database.child("moradas").child(tempMorada.id ?: "").setValue(tempMorada)
+                        .addOnCompleteListener {
+                            //_morada.value = tempMorada
+                            _user.value?.morada_id = ""
+                            nUser.morada_id = ""
+                            database.child("users").child(nUser.id!!).setValue(nUser)
+                        }
+                    _content.value = "nomorada"
+                    _bottomView.value = ""
+                    _drawer.value = "morada"
+                    _morada.value = null
+                    //}
+                }
+        }
+        //}
+    }
+
     fun getMorada() {
         //Log.i("ViewModel", auth.currentUser?.uid!!)
         database.child("users").child(auth.currentUser?.uid ?: "").get()
             .addOnCompleteListener { task ->
-                val result = task.result.value.toString()
+                val result = Gson().toJson(task.result.value)
                 val user = Gson().fromJson(result, Persona::class.java)
                 val morada_id = user.morada_id ?: ""
 
@@ -156,6 +192,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                         }
                     _titleNote.value = ""
                     _descrNote.value = ""
+                    _morada.value = tempMorada
 
                 }
 
@@ -163,19 +200,22 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
 
     }
 
-    fun archiveNote(note: Note, action:()->Unit) {
+    fun archiveNote(note: Note, action: () -> Unit) {
         //var archiveNote: Note
-        val tempMorada:Morada? = morada.value
+        val tempMorada: Morada? = morada.value
 
         tempMorada?.notesActive!!.map {
             if (it == note) {
                 //archiveNote = note
                 tempMorada.notesArchived?.add(note)
                 tempMorada.notesActive?.remove(note)
-                database.child("moradas").child(tempMorada.id ?: "").setValue(tempMorada).addOnCompleteListener{
-                    Log.i("viewModel","chingon")
-                    getMorada()
-                }
+                _morada.value = tempMorada
+                database.child("moradas").child(tempMorada.id ?: "").setValue(tempMorada)
+                    .addOnCompleteListener {
+                        Log.i("viewModel", "chingon")
+                        getMorada()
+                        action()
+                    }
 
             }
         }
@@ -185,7 +225,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
     fun getUser() {
         database.child("users").child(auth.currentUser?.uid ?: "").get()
             .addOnCompleteListener { task ->
-                val result = task.result.value.toString()
+                val result = Gson().toJson(task.result.value)
                 _user.value = Gson().fromJson(result, Persona::class.java)
 
             }
