@@ -50,7 +50,6 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
                 Log.w("signin", "Fetching FCM registration token failed", task.exception)
                 //return@addOnCompleteListener
             }
-            // Get new FCM registration token
             val token = task.result
             auth.createUserWithEmailAndPassword(mail, nPass).addOnCompleteListener { it ->
                 if (it.isSuccessful) {
@@ -64,23 +63,8 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
 
                 }
             }
-            // Log and toast
-            //val msg = getString(R.string.msg_token_fmt, token)
-            //Log.d(TAG, msg)
-            //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         }
-        /*if(!uid.isNullOrEmpty()){
-            persona.id = uid
-            if (result.isCanceled) return false
-        }else{
-            return false
-        }*/
-        //auth.createUserWithEmailAndPassword(persona.Email!!, persona.pass)
         return true
-
-    }
-
-    fun getNotificationId(){
 
     }
 

@@ -1,5 +1,6 @@
 package com.edwiinrtz.morad_app.view.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,17 +15,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.edwiinrtz.morad_app.R
 import com.edwiinrtz.morad_app.view.ui.components.Button
 import com.edwiinrtz.morad_app.view.ui.components.Input
-import com.edwiinrtz.morad_app.R
 import com.edwiinrtz.morad_app.viewmodel.LoginViewModel
 
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel, context: Context) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val pass: String by viewModel.pass.observeAsState(initial = "")
     Scaffold(
@@ -62,7 +61,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             Input("Email",email){viewModel.onValueChange(emailRef = true, nValue = it)}
             Input("Contraseña",pass){viewModel.onValueChange(passRef = true, nValue = it)}
             Button(text = "Ingresar",navController, "dashboard"){
-                viewModel.login(email, pass){
+                viewModel.login(email, pass, context){
                     navController.navigate("dashboard"){
                         popUpTo(navController.graph.id){
                             inclusive=true
@@ -81,6 +80,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    val navController = rememberNavController()
+    //val navController = rememberNavController()
     //LoginScreen(navController)
 }

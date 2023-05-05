@@ -1,7 +1,5 @@
-package com.edwiinrtz.morad_app.view.ui.components
+package com.edwiinrtz.morad_app.view.ui.screens
 
-import android.util.Log
-import androidx.compose.material.DrawerState
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -9,13 +7,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import com.edwiinrtz.morad_app.model.Morada
-import com.edwiinrtz.morad_app.model.Note
+import com.edwiinrtz.morad_app.view.ui.components.*
 import com.edwiinrtz.morad_app.viewmodel.DashboardViewModel
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -69,7 +64,7 @@ fun DashboardScreen(
             }
 
 
-            if (drawer == "morada") MoradaDrawer(morada = viewModel.morada.value ?: null){
+            if (drawer == "morada") MoradaDrawer(morada = viewModel.morada.value){
                 viewModel.leaveMorada()
 
                 navController.navigate("dashboard"){
@@ -88,7 +83,7 @@ fun DashboardScreen(
                     join = { viewModel.joinMorada() }
                 )
             }
-            if (bottomView == "addbutton") addButton { viewModel.changeBottonView("addnote") }
+            if (bottomView == "addbutton") AddButton { viewModel.changeBottonView("addnote") }
             if (bottomView == "addnote") AddNote(
                 close={viewModel.changeBottonView("addbutton")},
                 action={
@@ -134,14 +129,6 @@ fun DashboardScreen(
 
         }
     )
-}
-
-
-fun changeState(drawerState: DrawerState, scope: CoroutineScope) {
-    Log.i("DRAWER STATE", "Trying to open drawer")
-
-    /*if(drawerState.isOpen)  scope.launch { drawerState.close() }
-    scope.launch{drawerState.open()}*/
 }
 
 @Preview(showBackground = true)

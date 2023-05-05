@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun addButton(action:()->Unit) {
+fun AddButton(action:()->Unit) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,5 +39,5 @@ fun addButton(action:()->Unit) {
 @Preview(showBackground = true)
 @Composable
 fun addButtonPreview() {
-    addButton(){}
+    AddButton(){}
 }

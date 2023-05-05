@@ -1,9 +1,8 @@
 package com.edwiinrtz.morad_app.viewmodel
 
-import android.app.Application
-import android.content.Context
+//import com.google.firebase.messaging.ktx.messaging
+//import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,9 +15,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
-//import com.google.firebase.messaging.ktx.messaging
 import com.google.gson.Gson
-import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +23,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import kotlin.random.Random
 
-class DashboardViewModel(val auth: FirebaseAuth,val context: Context) : ViewModel() {
+class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
 
     //private val context = getApplication<Application>().applicationContext
 
@@ -173,13 +170,12 @@ class DashboardViewModel(val auth: FirebaseAuth,val context: Context) : ViewMode
             .addOnCompleteListener { task ->
                 val result = Gson().toJson(task.result.value)
                 val user = Gson().fromJson(result, Persona::class.java)
-                val morada_id = user.morada_id ?: ""
+                val moradaId = user.morada_id ?: ""
 
-                database.child("moradas").child(morada_id?:"").get().addOnCompleteListener {
+                database.child("moradas").child(moradaId).get().addOnCompleteListener {
                     //Log.i("viewModel", it.result.value.toString())
-                    val returned_morada =
-                        Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
-                    _morada.value = returned_morada
+                    val returnedMorada = Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
+                    _morada.value = returnedMorada
                     if (_morada.value?.id != null) {
                         _bottomView.value = "addbutton"
                         _content.value = "list"
@@ -199,7 +195,7 @@ class DashboardViewModel(val auth: FirebaseAuth,val context: Context) : ViewMode
                         Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
                     val nNote = Note(
                         title = titleNote.value.toString(),
-                        description = descrNote.value.toString() ?: ""
+                        description = descrNote.value.toString()
                     )
                     /*_content.value = "list"
                     _bottomView.value = "addbutton"
@@ -279,15 +275,15 @@ class DashboardViewModel(val auth: FirebaseAuth,val context: Context) : ViewMode
         _bottomView.value = nView
     }
 
-    fun changeContentState(nView: String) {
+    /*fun changeContentState(nView: String) {
         _content.value = nView
-    }
+    }*/
 
     fun openDrawer(nDrawer: String) {
         _drawer.value = nDrawer
     }
 
-    fun newNotificacion(mensaje:String) {
+    private fun newNotificacion(mensaje:String) {
         CoroutineScope(Dispatchers.IO).launch {
 
 

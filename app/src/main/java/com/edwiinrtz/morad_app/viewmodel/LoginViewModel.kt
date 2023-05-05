@@ -1,6 +1,8 @@
 package com.edwiinrtz.morad_app.viewmodel
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +30,7 @@ class LoginViewModel(private val auth: FirebaseAuth) : ViewModel() {
     }
 
 
-    fun login(mail: String, pass: String, action:()->Unit) {
+    fun login(mail: String, pass: String, context: Context, action:()->Unit) {
 
         auth.signInWithEmailAndPassword(mail, pass).addOnCompleteListener{ task ->
             if (task.isSuccessful) {
@@ -39,6 +41,7 @@ class LoginViewModel(private val auth: FirebaseAuth) : ViewModel() {
                 action()
                 //user = auth.currentUser!!
             } else {
+                Toast.makeText(context,"email  o contraseña incorrectos", Toast.LENGTH_LONG).show()
                 // If sign in fails, display a message to the user.
                 //updateUI(null)
             }

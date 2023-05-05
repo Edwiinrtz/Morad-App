@@ -8,7 +8,10 @@ import retrofit2.http.*
 
 interface APIService {
 
-    /*HEADERS ARE NEEDED*/
+    @Headers(
+        "Authorization: key=",
+        "Content-Type: application/json"
+    )
     @POST("fcm/send")
     suspend fun sendNotification(@Body requestBody: RequestBody): Response<ResponseBody>
 }
