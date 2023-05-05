@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
         val signinViewModel = SigninViewModel(auth)
         val loginViewModel = LoginViewModel(auth)
-        val dashboardViewModel = DashboardViewModel(auth)
+        val dashboardViewModel = DashboardViewModel(auth, this.applicationContext)
 
 
         setContent {

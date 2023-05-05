@@ -1,20 +1,35 @@
 package com.edwiinrtz.morad_app.viewmodel
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.edwiinrtz.morad_app.model.Morada
 import com.edwiinrtz.morad_app.model.Note
 import com.edwiinrtz.morad_app.model.Persona
+import com.edwiinrtz.morad_app.model.services.retrofitService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
+//import com.google.firebase.messaging.ktx.messaging
 import com.google.gson.Gson
+import com.google.gson.JsonParser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import kotlin.random.Random
 
-class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
+class DashboardViewModel(val auth: FirebaseAuth,val context: Context) : ViewModel() {
+
+    //private val context = getApplication<Application>().applicationContext
+
 
     var database = Firebase.database.reference
 
@@ -81,7 +96,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
     }
 
     fun joinMorada() {
-        Log.i("viewModel", user.value.toString())
+        //Log.i("viewModel", user.value.toString())
         if (!joinMoradaText.value.isNullOrEmpty()) {
             database.child("moradas").child(joinMoradaText.value!!).get().addOnCompleteListener {
                 val tempMorada = Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
@@ -90,11 +105,12 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                 //if (added == true) {
                 database.child("users").child(auth.currentUser?.uid!!).get()
                     .addOnCompleteListener { xx ->
-                        val nUser = Gson().fromJson(Gson().toJson(xx.result.value), Persona::class.java)
+                        val nUser =
+                            Gson().fromJson(Gson().toJson(xx.result.value), Persona::class.java)
                         nUser.morada_id = tempMorada.id
 
                         tempMorada.members?.add(nUser)
-                        Log.i("members", tempMorada.members.toString())
+                        //Log.i("members", tempMorada.members.toString())
 
                         database.child("moradas").child(tempMorada.id ?: "").setValue(tempMorada)
                             .addOnCompleteListener {
@@ -103,6 +119,9 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                                 nUser.morada_id = tempMorada.id.toString()
                                 database.child("users").child(nUser.id!!).setValue(nUser)
                             }
+
+                        Firebase.messaging.subscribeToTopic(tempMorada.id ?: "")
+                        //database.child("tokens").child(tempMorada.id ?: "").setValue()
                         _content.value = "list"
                         _bottomView.value = "addbutton"
                         //}
@@ -156,7 +175,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                 val user = Gson().fromJson(result, Persona::class.java)
                 val morada_id = user.morada_id ?: ""
 
-                database.child("moradas").child(morada_id).get().addOnCompleteListener {
+                database.child("moradas").child(morada_id?:"").get().addOnCompleteListener {
                     //Log.i("viewModel", it.result.value.toString())
                     val returned_morada =
                         Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
@@ -194,11 +213,21 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                     _descrNote.value = ""
                     _morada.value = tempMorada
 
+
                 }
+            val mensaje = """            
+            {
+                "to" : "/topics/${_morada.value?.id}",
+                "notification" : {
+                    "title" : "Nuevo",
+                    "body": "Una nueva nota fue creada"
+                }
+            }""".trimIndent()
 
+            newNotificacion(mensaje)
         }
-
     }
+
 
     fun archiveNote(note: Note, action: () -> Unit) {
         //var archiveNote: Note
@@ -219,6 +248,16 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
 
             }
         }
+        val mensaje = """            
+            {
+                "to" : "/topics/${_morada.value?.id}",
+                "notification" : {
+                    "title" : "Hey!",
+                    "body": "Alguien de tu morada ha completado algún pendiente"
+                }
+            }""".trimIndent()
+
+        newNotificacion(mensaje)
     }
 
 
@@ -227,7 +266,6 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
             .addOnCompleteListener { task ->
                 val result = Gson().toJson(task.result.value)
                 _user.value = Gson().fromJson(result, Persona::class.java)
-
             }
     }
 
@@ -248,4 +286,25 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
     fun openDrawer(nDrawer: String) {
         _drawer.value = nDrawer
     }
+
+    fun newNotificacion(mensaje:String) {
+        CoroutineScope(Dispatchers.IO).launch {
+
+
+            val mediaType = MediaType.parse("application/json")
+            val requestBody = RequestBody.create(mediaType, mensaje)
+
+            //val message = JsonParser.parseString(mensaje).asJsonObject
+
+            //Log.i("message",message.toString())
+            retrofitService.call.sendNotification(requestBody)
+        }
+
+    }
 }
+
+
+
+
+
+

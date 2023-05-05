@@ -9,5 +9,6 @@ data class Persona(
     val email: String? = null,
     val pass: String? = null,
     var morada_id: String? = null,
-    var atHome: Boolean? = false
+    var atHome: Boolean? = false,
+    var notificationId: String? = null,
 )

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.edwiinrtz.morad_app"
-        minSdk 24
+        minSdk 23
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -74,9 +74,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 
+    //implementation 'com.google.firebase:firebase-admin'
     //gson
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
 
 }

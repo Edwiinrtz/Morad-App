@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
 
@@ -40,19 +41,34 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
     }
 
     fun signin(persona: Persona): Boolean {
+
         val mail: String = persona.email!!
         val nPass: String = persona.pass!!
-        auth.createUserWithEmailAndPassword(mail, nPass).addOnCompleteListener { it ->
-            if (it.isSuccessful) {
-                persona.id = it.result.user?.uid!!
-                database.child("users").child(persona.id!!).setValue(persona)
-                _email.value = ""
-                _pass.value = ""
-                _name.value = ""
-                _lastName.value = ""
-            }
-        }
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener{ task ->
+            if (!task.isSuccessful) {
+                Log.w("signin", "Fetching FCM registration token failed", task.exception)
+                //return@addOnCompleteListener
+            }
+            // Get new FCM registration token
+            val token = task.result
+            auth.createUserWithEmailAndPassword(mail, nPass).addOnCompleteListener { it ->
+                if (it.isSuccessful) {
+                    persona.id = it.result.user?.uid!!
+                    persona.notificationId = token.toString()
+                    database.child("users").child(persona.id!!).setValue(persona)
+                    _email.value = ""
+                    _pass.value = ""
+                    _name.value = ""
+                    _lastName.value = ""
+
+                }
+            }
+            // Log and toast
+            //val msg = getString(R.string.msg_token_fmt, token)
+            //Log.d(TAG, msg)
+            //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+        }
         /*if(!uid.isNullOrEmpty()){
             persona.id = uid
             if (result.isCanceled) return false
@@ -61,6 +77,10 @@ class SigninViewModel(val auth: FirebaseAuth) : ViewModel() {
         }*/
         //auth.createUserWithEmailAndPassword(persona.Email!!, persona.pass)
         return true
+
+    }
+
+    fun getNotificationId(){
 
     }
 
