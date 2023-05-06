@@ -95,6 +95,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                     database.child("users").child(creatorUser.uid).child("morada_id")
                         .setValue(morada.value?.id)
                 }
+            Firebase.messaging.subscribeToTopic(nMorada.id.toString())
         }
     }
 
@@ -123,6 +124,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                                 database.child("users").child(nUser.id!!).setValue(nUser)
                             }
 
+                        //Log.i("joinMorada", tempMorada.id.toString())
                         Firebase.messaging.subscribeToTopic(tempMorada.id ?: "")
                         //database.child("tokens").child(tempMorada.id ?: "").setValue()
                         _content.value = "list"
