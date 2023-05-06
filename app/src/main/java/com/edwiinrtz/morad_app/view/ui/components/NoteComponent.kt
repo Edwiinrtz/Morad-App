@@ -1,5 +1,6 @@
 package com.edwiinrtz.morad_app.view.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
@@ -27,12 +28,12 @@ fun NoteComponent(note: Note, toArchive: (Note) -> Unit) {
                 Text(text = note.title?:"", fontSize = 20.sp, fontWeight = FontWeight.Black)
                 Text(text = note.description?:"", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
             }
-            Checkbox(checked = checked?:false, onCheckedChange = {
+            Checkbox(checked = checked, onCheckedChange = {
 
-                checked = !checked!!;
-                note.archived = checked
+                checked = !checked!!
 
-                if(note.archived==true){
+                if(checked){
+
                     toArchive(note)
                 }
             })

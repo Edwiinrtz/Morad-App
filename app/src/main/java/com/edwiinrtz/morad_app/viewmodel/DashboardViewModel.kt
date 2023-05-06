@@ -2,7 +2,14 @@ package com.edwiinrtz.morad_app.viewmodel
 
 //import com.google.firebase.messaging.ktx.messaging
 //import android.content.Context
+import android.content.Context
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
+import android.net.wifi.WifiSsid
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -72,8 +79,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
             id = "" + Random.nextInt(1000, 9999),
             notesActive = mutableListOf(),
             notesArchived = mutableListOf(),
-            members = mutableListOf(),
-            ssid = "Bankai"
+            members = mutableListOf()
         )
 
         database.child("users").child(creatorUser.uid).get().addOnCompleteListener { task ->
@@ -156,10 +162,11 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                         }
                     _content.value = "nomorada"
                     _bottomView.value = ""
-                    _drawer.value = "morada"
+                    _drawer.value = "list"
                     _morada.value = null
                     //}
                 }
+            Firebase.messaging.unsubscribeFromTopic(tempMorada.id ?: "")
         }
         //}
     }
@@ -174,7 +181,8 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
 
                 database.child("moradas").child(moradaId).get().addOnCompleteListener {
                     //Log.i("viewModel", it.result.value.toString())
-                    val returnedMorada = Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
+                    val returnedMorada =
+                        Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
                     _morada.value = returnedMorada
                     if (_morada.value?.id != null) {
                         _bottomView.value = "addbutton"
@@ -187,15 +195,15 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
 
     fun createNota(navigate: () -> Unit) {
         if (morada.value?.id != null && titleNote.value.toString().isNotEmpty()) {
-            database.child("moradas").child(morada.value?.id!!).get()
-                .addOnCompleteListener {
+            database.child("moradas").child(morada.value?.id!!).get().addOnCompleteListener {
                     //val tempMorada = it.result.value
                     //val tempJson = Gson().toJson(tempMorada)
                     val tempMorada =
                         Gson().fromJson(Gson().toJson(it.result.value), Morada::class.java)
                     val nNote = Note(
                         title = titleNote.value.toString(),
-                        description = descrNote.value.toString()
+                        description = descrNote.value.toString(),
+                        archived = false
                     )
                     /*_content.value = "list"
                     _bottomView.value = "addbutton"
@@ -208,8 +216,6 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
                     _titleNote.value = ""
                     _descrNote.value = ""
                     _morada.value = tempMorada
-
-
                 }
             val mensaje = """            
             {
@@ -227,17 +233,16 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
 
     fun archiveNote(note: Note, action: () -> Unit) {
         //var archiveNote: Note
-        val tempMorada: Morada? = morada.value
+        val tempMorada: Morada? = _morada.value
 
         tempMorada?.notesActive!!.map {
             if (it == note) {
-                //archiveNote = note
-                tempMorada.notesArchived?.add(note)
                 tempMorada.notesActive?.remove(note)
+                note.archived = true
+                tempMorada.notesArchived?.add(note)
                 _morada.value = tempMorada
                 database.child("moradas").child(tempMorada.id ?: "").setValue(tempMorada)
                     .addOnCompleteListener {
-                        Log.i("viewModel", "chingon")
                         getMorada()
                         action()
                     }
@@ -283,7 +288,7 @@ class DashboardViewModel(val auth: FirebaseAuth) : ViewModel() {
         _drawer.value = nDrawer
     }
 
-    private fun newNotificacion(mensaje:String) {
+    private fun newNotificacion(mensaje: String) {
         CoroutineScope(Dispatchers.IO).launch {
 
 
