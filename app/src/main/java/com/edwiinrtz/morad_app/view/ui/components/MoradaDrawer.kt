@@ -45,7 +45,7 @@ fun MoradaDrawer(morada: Morada? = null, abandonar:() -> Unit) {
                 fontSize = 16.sp
             )
             Spacer(modifier = Modifier.size(60.dp))
-            Text(
+            /*Text(
                 text = "Red Wifi: " + morada?.ssid,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -53,7 +53,7 @@ fun MoradaDrawer(morada: Morada? = null, abandonar:() -> Unit) {
                 textAlign = TextAlign.Start,
                 fontSize = 20.sp
             )
-            Spacer(modifier = Modifier.size(30.dp))
+            Spacer(modifier = Modifier.size(30.dp))*/
             Text(
                 text = "Integrantes",
                 modifier = Modifier
